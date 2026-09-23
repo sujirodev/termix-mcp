@@ -36,14 +36,14 @@ def _build_table() -> str:
     register_all_tools(mcp, MagicMock(), settings)
 
     lines = [
-        "| Tool | Toolset | Read-only | Destrutiva | Flags |",
+        "| Tool | Toolset | Read-only | Destructive | Flags |",
         "|---|---|:---:|:---:|---|",
     ]
     for meta in sorted(TOOL_TABLE.values(), key=lambda m: (m.toolset, m.name)):
         flags = ", ".join(sorted(meta.flags)) or "-"
         lines.append(
-            f"| `{meta.name}` | {meta.toolset} | {'sim' if meta.read_only else 'nao'} | "
-            f"{'sim' if meta.destructive else 'nao'} | {flags} |"
+            f"| `{meta.name}` | {meta.toolset} | {'yes' if meta.read_only else 'no'} | "
+            f"{'yes' if meta.destructive else 'no'} | {flags} |"
         )
     lines.append("")
     lines.append(f"Total: {len(TOOL_TABLE)} tools.")
