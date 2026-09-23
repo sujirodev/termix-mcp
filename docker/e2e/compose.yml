@@ -1,0 +1,19 @@
+# Termix instance the E2E suite (tests/e2e/) runs against. Ephemeral on purpose: the
+# suite registers its own user, mints its own API key and cleans up what it created.
+#
+# Pinned to the release termix-sdk's SPEC_VERSION was generated from, not `:latest`.
+# `.github/workflows/live.yml` always sets TERMIX_IMAGE itself (`:latest` unless
+# workflow_dispatch overrides it) so the weekly run finds an upstream break first.
+#
+# `guacd` is deliberately absent; no tool touches remote desktop. The image ships its
+# own healthcheck, so `docker compose up -d --wait` blocks until Termix is serving.
+
+services:
+  termix:
+    image: ${TERMIX_IMAGE:-ghcr.io/lukegus/termix:2.8.0}
+    ports:
+      - "${TERMIX_E2E_PORT:-8080}:8080"
+    environment:
+      PORT: "8080"
+    tmpfs:
+      - /app/data

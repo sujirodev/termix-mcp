@@ -1,0 +1,15 @@
+# Overlay for live.yml: a throwaway sshd the `requires_ssh` tests point a Termix host at.
+# Termix reaches it as `sshd:2222` on the compose network.
+
+services:
+  sshd:
+    image: linuxserver/openssh-server:latest
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      USER_NAME: ci
+      USER_PASSWORD: ${TERMIX_E2E_SSH_PASSWORD:-Live-Ssh-Aa1-local}
+      PASSWORD_ACCESS: "true"
+      SUDO_ACCESS: "false"
+    ports:
+      - "2222:2222"

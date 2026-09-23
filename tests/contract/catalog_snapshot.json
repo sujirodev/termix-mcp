@@ -1,0 +1,2807 @@
+[
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Reconhece (acknowledge) um disparo de alerta especifico.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "firing_id": {
+          "description": "ID do disparo de alerta",
+          "type": "string"
+        }
+      },
+      "required": [
+        "firing_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_acknowledge_alert_firing",
+    "toolset": "alerts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Atribui um papel RBAC a um usuario. Requer privilegio de admin.",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "role_id": {
+          "description": "ID do papel a atribuir",
+          "type": "integer"
+        },
+        "user_id": {
+          "description": "ID do usuario",
+          "type": "string"
+        }
+      },
+      "required": [
+        "user_id",
+        "role_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_assign_role",
+    "toolset": "users"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": false,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Cria uma regra de alerta. Valores de gatilho e limites validados contra o\n        backend do Termix 2.8.0 (alert-rules-routes.ts).",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "channels": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "IDs dos canais de notificacao a usar"
+        },
+        "cooldown_minutes": {
+          "default": 15,
+          "description": "Minutos de espera antes de disparar de novo",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "enabled": {
+          "default": true,
+          "description": "Se a regra comeca ativa",
+          "type": "boolean"
+        },
+        "host_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ID do host monitorado; omitido para user_login"
+        },
+        "name": {
+          "description": "Nome da regra",
+          "type": "string"
+        },
+        "threshold_duration_seconds": {
+          "default": 0,
+          "description": "Por quanto tempo o limite precisa se manter",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "threshold_value": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Limite em % (0-100) para gatilhos *_threshold"
+        },
+        "trigger_type": {
+          "description": "Gatilho; os *_threshold usam threshold_value em porcentagem",
+          "enum": [
+            "host_offline",
+            "host_online",
+            "cpu_threshold",
+            "memory_threshold",
+            "disk_threshold",
+            "health_check_failure",
+            "health_check_recovery",
+            "user_login"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "trigger_type"
+      ],
+      "type": "object"
+    },
+    "name": "termix_create_alert_rule",
+    "toolset": "alerts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": false,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Cria uma nova credencial reutilizavel para hosts.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "auth_type": {
+          "description": "password ou key",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Descricao opcional"
+        },
+        "folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pasta onde organizar"
+        },
+        "key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Chave privada (se auth_type=key)"
+        },
+        "key_password": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Senha da chave privada"
+        },
+        "name": {
+          "description": "Nome da credencial",
+          "type": "string"
+        },
+        "password": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Senha (se auth_type=password)"
+        },
+        "tags": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Tags"
+        },
+        "username": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Usuario"
+        }
+      },
+      "required": [
+        "name",
+        "auth_type"
+      ],
+      "type": "object"
+    },
+    "name": "termix_create_credential",
+    "toolset": "credentials"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Cria um diretorio remoto.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "folder_name": {
+          "description": "Nome da nova pasta",
+          "type": "string"
+        },
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        },
+        "path": {
+          "description": "Diretorio pai",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id",
+        "path",
+        "folder_name"
+      ],
+      "type": "object"
+    },
+    "name": "termix_create_folder",
+    "toolset": "files"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": false,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Cria um novo host SSH. Use `credential_id` em vez de senha/chave inline sempre\n        que possivel, para nao passar segredos pela chamada da tool.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "auth_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "password, key ou credential"
+        },
+        "connection_type": {
+          "default": "ssh",
+          "description": "Tipo de conexao: ssh, rdp, vnc ou telnet",
+          "type": "string"
+        },
+        "credential_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ID de uma credencial ja cadastrada, em vez de segredo inline"
+        },
+        "enable_docker": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Habilita painel Docker"
+        },
+        "enable_file_manager": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Habilita gerenciador de arquivos"
+        },
+        "enable_terminal": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Habilita terminal"
+        },
+        "enable_tunnel": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Habilita tuneis"
+        },
+        "folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pasta onde organizar o host"
+        },
+        "ip": {
+          "description": "IP ou hostname",
+          "type": "string"
+        },
+        "key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Chave privada SSH (texto plano)"
+        },
+        "key_password": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Senha da chave privada"
+        },
+        "name": {
+          "description": "Nome de exibicao do host",
+          "type": "string"
+        },
+        "password": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Senha SSH (texto plano)"
+        },
+        "port": {
+          "default": 22,
+          "description": "Porta SSH",
+          "maximum": 65535,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "tags": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Tags do host"
+        },
+        "username": {
+          "description": "Usuario SSH",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "ip",
+        "username"
+      ],
+      "type": "object"
+    },
+    "name": "termix_create_host",
+    "toolset": "hosts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": false,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Cria um novo snippet de comando.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "description": "Conteudo do comando/script",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Descricao opcional"
+        },
+        "folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pasta onde organizar"
+        },
+        "host_filter": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Filtro opcional de quais hosts podem rodar isto"
+        },
+        "name": {
+          "description": "Nome do snippet",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "content"
+      ],
+      "type": "object"
+    },
+    "name": "termix_create_snippet",
+    "toolset": "snippets"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": false,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Cria e conecta um tunel SSH. Expoe apenas um subconjunto curado dos campos do\n        Termix (nao cobre todas as opcoes de SOCKS5/retry da API).",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "auto_start": {
+          "default": false,
+          "description": "Reconecta automaticamente",
+          "type": "boolean"
+        },
+        "local_address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Endereco local a expor (modo local)"
+        },
+        "mode": {
+          "description": "Tipo de encaminhamento",
+          "enum": [
+            "local",
+            "remote",
+            "dynamic"
+          ],
+          "type": "string"
+        },
+        "name": {
+          "description": "Nome unico do tunel",
+          "type": "string"
+        },
+        "remote_address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Endereco remoto a expor (modo remote)"
+        },
+        "source_host_id": {
+          "description": "ID do host de origem (que abre o tunel)",
+          "type": "integer"
+        },
+        "source_port": {
+          "description": "Porta local do tunel",
+          "maximum": 65535,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "target_host": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Host de destino (modo local/remote)"
+        }
+      },
+      "required": [
+        "name",
+        "source_host_id",
+        "mode",
+        "source_port"
+      ],
+      "type": "object"
+    },
+    "name": "termix_create_tunnel",
+    "toolset": "tunnels"
+  },
+  {
+    "annotations": {
+      "destructive_hint": true,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Remove uma regra de alerta.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "rule_id": {
+          "description": "ID da regra a remover",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_delete_alert_rule",
+    "toolset": "alerts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": true,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Remove uma credencial permanentemente.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "credential_id": {
+          "description": "ID da credencial",
+          "type": "string"
+        }
+      },
+      "required": [
+        "credential_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_delete_credential",
+    "toolset": "credentials"
+  },
+  {
+    "annotations": {
+      "destructive_hint": true,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Remove um arquivo ou diretorio remoto. Por padrao vai para a lixeira do\n        Termix (`permanent=False`); confirme com o usuario antes de usar `permanent=True`.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        },
+        "is_directory": {
+          "default": false,
+          "description": "Se o caminho e um diretorio",
+          "type": "boolean"
+        },
+        "path": {
+          "description": "Caminho a remover",
+          "type": "string"
+        },
+        "permanent": {
+          "default": false,
+          "description": "Remove permanentemente (pula a lixeira)",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "host_id",
+        "path"
+      ],
+      "type": "object"
+    },
+    "name": "termix_delete_file",
+    "toolset": "files"
+  },
+  {
+    "annotations": {
+      "destructive_hint": true,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Remove um host SSH permanentemente. Nao ha confirmacao adicional; confirme com\n        o usuario antes de chamar esta tool.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host a remover",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_delete_host",
+    "toolset": "hosts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": true,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Remove um snippet permanentemente.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "snippet_id": {
+          "description": "ID do snippet a remover",
+          "type": "string"
+        }
+      },
+      "required": [
+        "snippet_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_delete_snippet",
+    "toolset": "snippets"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Desconecta um tunel SSH ativo.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "tunnel_name": {
+          "description": "Nome do tunel a desconectar",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tunnel_name"
+      ],
+      "type": "object"
+    },
+    "name": "termix_delete_tunnel",
+    "toolset": "tunnels"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Desabilita autostart para uma configuracao SSH.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "ssh_config_id": {
+          "description": "ID da configuracao SSH",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "ssh_config_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_disable_host_autostart",
+    "toolset": "hosts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Habilita autostart para uma configuracao SSH.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "ssh_config_id": {
+          "description": "ID da configuracao SSH",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "ssh_config_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_enable_host_autostart",
+    "toolset": "hosts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Configuracao de encaminhamento de logs de auditoria (nunca expoe o token).",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_get_audit_forwarding",
+    "toolset": "admin"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Detalhes de uma automacao especifica.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "automation_id": {
+          "description": "ID da automacao",
+          "type": "string"
+        }
+      },
+      "required": [
+        "automation_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_automation",
+    "toolset": "automations"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Configuracao de branding da instancia (nome, tagline, logo).",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_get_branding",
+    "toolset": "admin"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Detalhes de um container: imagem, estado, portas, montagens, redes.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "container_id": {
+          "description": "ID do container",
+          "type": "string"
+        },
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id",
+        "container_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_container",
+    "toolset": "docker"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Logs recentes de um container (limitados por `tail`, ja suportado pela API).",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "container_id": {
+          "description": "ID do container",
+          "type": "string"
+        },
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        },
+        "tail": {
+          "default": 200,
+          "description": "Numero de linhas do fim do log",
+          "maximum": 10000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "timestamps": {
+          "default": false,
+          "description": "Inclui timestamp em cada linha",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "host_id",
+        "container_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_container_logs",
+    "toolset": "docker"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "CPU, memoria, rede e disco em tempo real de um container.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "container_id": {
+          "description": "ID do container",
+          "type": "string"
+        },
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id",
+        "container_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_container_stats",
+    "toolset": "docker"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Detalhes de uma credencial, com segredos sempre mascarados. Use\n        `termix_reveal_credential` para obter o valor real.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "credential_id": {
+          "description": "ID da credencial",
+          "type": "string"
+        }
+      },
+      "required": [
+        "credential_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_credential",
+    "toolset": "credentials"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Resumo do dashboard: uptime do Termix, atividade recente e links de servico\n        configurados (nao ha um endpoint unico; combina tres chamadas).",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "activity_limit": {
+          "default": 20,
+          "description": "Quantos eventos de atividade recente incluir",
+          "maximum": 200,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "name": "termix_get_dashboard_summary",
+    "toolset": "dashboard"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Status de criptografia dos dados da instancia (somente leitura).",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_get_encryption_status",
+    "toolset": "admin"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Itens e layout da homepage configurada (combina duas chamadas: list_items e\n        get_layout).",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_get_homepage",
+    "toolset": "dashboard"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Detalhes de um host SSH especifico.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_host",
+    "toolset": "hosts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Configuracoes default aplicadas a hosts novos (ex.: proxy SOCKS5).",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_get_host_defaults",
+    "toolset": "admin"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Metricas atuais (CPU, memoria, disco, rede, uptime, processos) de um host.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_host_metrics",
+    "toolset": "metrics"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Status de conectividade (online/offline/reachable) de um host especifico.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_host_status",
+    "toolset": "metrics"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Historico de metricas de um host. O Termix decide a janela de tempo\n        retornada (nao ha parametro de intervalo nesta versao do SDK); veja\n        `termix_get_preferences`/retencao configurada para saber quanto historico existe.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_metrics_history",
+    "toolset": "metrics"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Topologia de rede salva para o usuario dono da API key. Retorna vazio se nunca\n        foi salva.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_get_network_topology",
+    "toolset": "hosts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Preferencias do usuario dono da API key (tema, idioma, storage mode etc.).",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_get_preferences",
+    "toolset": "system"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Estatisticas (nos, storage, convidados) em cache de um host Proxmox.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host Proxmox",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_proxmox_stats",
+    "toolset": "metrics"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Metadados de um log de sessao; opcionalmente inclui o conteudo gravado,\n        truncado em `max_chars` (a API do Termix nao trunca no servidor).",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "include_content": {
+          "default": false,
+          "description": "Tambem buscar e incluir o conteudo gravado da sessao",
+          "type": "boolean"
+        },
+        "max_chars": {
+          "default": 4000,
+          "description": "Trunca o conteudo neste numero de caracteres",
+          "maximum": 100000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "session_log_id": {
+          "description": "ID do log de sessao",
+          "type": "string"
+        }
+      },
+      "required": [
+        "session_log_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_session_log",
+    "toolset": "audit"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Detalhes de um snippet especifico, incluindo o conteudo do comando.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "snippet_id": {
+          "description": "ID do snippet",
+          "type": "string"
+        }
+      },
+      "required": [
+        "snippet_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_snippet",
+    "toolset": "snippets"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Status de saude e versao do Termix conectado (nao ha um endpoint unico; combina\n        health() e version() do SDK).",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_get_system_info",
+    "toolset": "system"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Status do Termix ID (identidade federada) do usuario dono da API key.",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_get_termix_id_status",
+    "toolset": "admin"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Status de um tunel SSH especifico pelo nome.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "tunnel_name": {
+          "description": "Nome do tunel",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tunnel_name"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_tunnel",
+    "toolset": "tunnels"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Detalhes de um usuario especifico (nao ha endpoint dedicado; filtra a lista\n        completa de usuarios). Requer privilegio de admin.",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "user_id": {
+          "description": "ID do usuario",
+          "type": "string"
+        }
+      },
+      "required": [
+        "user_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_get_user",
+    "toolset": "users"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista os alertas ativos no momento.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_active_alerts",
+    "toolset": "metrics"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista as regras de alerta configuradas.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_alert_rules",
+    "toolset": "alerts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista metadados das API keys cadastradas no Termix (nunca o valor do token).\n        Requer privilegio de admin no Termix; falha com erro de permissao caso contrario.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_api_keys",
+    "toolset": "system"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista eventos de auditoria (quem fez o que, quando).",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "limit": {
+          "default": 50,
+          "description": "Itens por pagina",
+          "maximum": 200,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "page": {
+          "default": 1,
+          "description": "Numero da pagina, comecando em 1",
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "name": "termix_list_audit_events",
+    "toolset": "audit"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista as automacoes do usuario dono da API key.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_automations",
+    "toolset": "automations"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista os containers Docker de um host.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        },
+        "show_all": {
+          "default": true,
+          "description": "Inclui containers parados, nao so os rodando",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "host_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_list_containers",
+    "toolset": "docker"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista com quem uma credencial esta compartilhada.",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "credential_id": {
+          "description": "ID da credencial",
+          "type": "string"
+        }
+      },
+      "required": [
+        "credential_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_list_credential_access",
+    "toolset": "users"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista credenciais cadastradas (metadados; segredos sempre mascarados).",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_credentials",
+    "toolset": "credentials"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista arquivos e diretorios em um caminho de um host, via sessao SSH aberta\n        e fechada dentro desta chamada.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        },
+        "path": {
+          "default": "/",
+          "description": "Diretorio a listar",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_list_files",
+    "toolset": "files"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista as frotas (grupos de hosts) do usuario dono da API key.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_fleets",
+    "toolset": "automations"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista as regras de compartilhamento permanente de uma pasta de hosts.",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "folder": {
+          "description": "Nome da pasta",
+          "type": "string"
+        }
+      },
+      "required": [
+        "folder"
+      ],
+      "type": "object"
+    },
+    "name": "termix_list_folder_access",
+    "toolset": "users"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista as pastas usadas para organizar hosts.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_host_folders",
+    "toolset": "hosts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Status de conectividade de varios hosts de uma vez.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_ids": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "IDs dos hosts a consultar; omitido consulta todos"
+        }
+      },
+      "type": "object"
+    },
+    "name": "termix_list_host_statuses",
+    "toolset": "metrics"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista as tags em uso, derivadas do campo `tags` de cada host (o Termix nao tem\n        um endpoint dedicado para isso).",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_host_tags",
+    "toolset": "hosts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista os hosts SSH cadastrados no Termix, com filtros opcionais aplicados no\n        cliente (a API do Termix nao suporta filtro server-side).",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Filtra por pasta exata"
+        },
+        "tag": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Filtra por tag exata"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Filtra por texto no nome ou IP (case-insensitive)"
+        }
+      },
+      "type": "object"
+    },
+    "name": "termix_list_hosts",
+    "toolset": "hosts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista as abas abertas salvas do usuario dono da API key.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_open_tabs",
+    "toolset": "dashboard"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista os papeis (roles) RBAC disponiveis.",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_roles",
+    "toolset": "users"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista os logs de sessao (terminal) gravados.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_session_logs",
+    "toolset": "audit"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista os snippets de comando cadastrados.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_snippets",
+    "toolset": "snippets"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista todos os provedores SSO configurados, incluindo desabilitados.\n        Requer privilegio de admin.",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_sso_providers",
+    "toolset": "admin"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista os presets de tunel salvos (configuracoes reutilizaveis).",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_tunnel_presets",
+    "toolset": "tunnels"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Status de todos os tuneis SSH ativos.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_tunnels",
+    "toolset": "tunnels"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista os usuarios do Termix. Requer privilegio de admin.",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_users",
+    "toolset": "users"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Lista os workspaces salvos do usuario dono da API key.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "termix_list_workspaces",
+    "toolset": "dashboard"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Move (ou renomeia entre diretorios) um arquivo ou diretorio remoto.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        },
+        "new_path": {
+          "description": "Novo caminho",
+          "type": "string"
+        },
+        "old_path": {
+          "description": "Caminho atual",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id",
+        "old_path",
+        "new_path"
+      ],
+      "type": "object"
+    },
+    "name": "termix_move_file",
+    "toolset": "files"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Le o conteudo de um arquivo remoto, truncado em `max_chars` (a API do Termix\n        nao limita tamanho no servidor).",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        },
+        "max_chars": {
+          "default": 20000,
+          "description": "Trunca o conteudo neste numero de caracteres",
+          "maximum": 200000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "path": {
+          "description": "Caminho do arquivo",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id",
+        "path"
+      ],
+      "type": "object"
+    },
+    "name": "termix_read_file",
+    "toolset": "files"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Renomeia um arquivo ou diretorio remoto, mantendo o diretorio.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        },
+        "new_name": {
+          "description": "Novo nome (mesmo diretorio)",
+          "type": "string"
+        },
+        "old_path": {
+          "description": "Caminho atual",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id",
+        "old_path",
+        "new_name"
+      ],
+      "type": "object"
+    },
+    "name": "termix_rename_file",
+    "toolset": "files"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Reinicia um container.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "container_id": {
+          "description": "ID do container",
+          "type": "string"
+        },
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id",
+        "container_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_restart_container",
+    "toolset": "docker"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": false,
+      "open_world_hint": true,
+      "read_only_hint": true
+    },
+    "description": "Detalhes de uma credencial incluindo o segredo em texto plano, apenas se\n        `TERMIX_MCP_REDACT_SECRETS=false`. Com a configuracao padrao, este resultado sai\n        mascarado igual a `termix_get_credential`.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "credential_id": {
+          "description": "ID da credencial",
+          "type": "string"
+        }
+      },
+      "required": [
+        "credential_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_reveal_credential",
+    "toolset": "credentials"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": false,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Executa uma automacao agora. Isto tem efeito colateral real nos hosts\n        alcancados pela automacao, a menos que `dry_run=True`; confirme com o usuario\n        antes de rodar sem dry_run.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "automation_id": {
+          "description": "ID da automacao a rodar",
+          "type": "string"
+        },
+        "dry_run": {
+          "default": false,
+          "description": "Simula sem executar de verdade",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "automation_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_run_automation",
+    "toolset": "automations"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": false,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Executa um snippet em um host real via SSH. Isto tem efeito colateral no host\n        de destino; confirme com o usuario antes de chamar, a menos que ele ja tenha\n        pedido explicitamente para rodar este comando.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "host_id": {
+          "description": "ID do host onde executar",
+          "type": "integer"
+        },
+        "input_values": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Valores para variaveis de entrada do snippet, se houver"
+        },
+        "snippet_id": {
+          "description": "ID do snippet a executar",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "snippet_id",
+        "host_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_run_snippet",
+    "toolset": "snippets"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Inicia um container parado.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "container_id": {
+          "description": "ID do container",
+          "type": "string"
+        },
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id",
+        "container_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_start_container",
+    "toolset": "docker"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Para um container rodando.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "container_id": {
+          "description": "ID do container",
+          "type": "string"
+        },
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id",
+        "container_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_stop_container",
+    "toolset": "docker"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Atualiza o branding da instancia. Requer privilegio de admin.",
+    "flags": [
+      "admin"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "app_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nome da aplicacao"
+        },
+        "logo": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "URL ou dado do logo"
+        },
+        "tagline": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Tagline"
+        }
+      },
+      "type": "object"
+    },
+    "name": "termix_update_branding",
+    "toolset": "admin"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Atualiza campos de uma credencial existente.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "credential_id": {
+          "description": "ID da credencial",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova descricao"
+        },
+        "folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova pasta"
+        },
+        "key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova chave privada"
+        },
+        "key_password": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova senha da chave"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Novo nome"
+        },
+        "password": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova senha"
+        },
+        "tags": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Novas tags"
+        },
+        "username": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Novo usuario"
+        }
+      },
+      "required": [
+        "credential_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_update_credential",
+    "toolset": "credentials"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Atualiza campos de um host SSH existente. Campos omitidos nao sao alterados:\n        o PUT do Termix substitui o registro inteiro (tags/flags/credentialId omitidos\n        viram vazio), entao a tool le o host atual e envia o merge. Senha/chave atuais\n        sao preservadas pelo backend quando nao enviadas (host.ts, release-2.8.0).",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "auth_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "password, key ou credential"
+        },
+        "credential_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova credencial associada"
+        },
+        "enable_docker": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Habilita/desabilita painel Docker"
+        },
+        "enable_file_manager": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Habilita/desabilita gerenciador de arquivos"
+        },
+        "enable_terminal": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Habilita/desabilita terminal"
+        },
+        "enable_tunnel": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Habilita/desabilita tuneis"
+        },
+        "folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova pasta"
+        },
+        "host_id": {
+          "description": "ID do host a atualizar",
+          "type": "string"
+        },
+        "ip": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Novo IP ou hostname"
+        },
+        "key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova chave privada SSH"
+        },
+        "key_password": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova senha da chave privada"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Novo nome de exibicao"
+        },
+        "password": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova senha SSH (texto plano)"
+        },
+        "port": {
+          "anyOf": [
+            {
+              "maximum": 65535,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova porta SSH"
+        },
+        "tags": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Novas tags (substitui as atuais)"
+        },
+        "username": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Novo usuario SSH"
+        }
+      },
+      "required": [
+        "host_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_update_host",
+    "toolset": "hosts"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Atualiza campos de um snippet existente. Campos omitidos nao sao alterados.",
+    "flags": [],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Novo conteudo do comando/script"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova descricao"
+        },
+        "folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nova pasta"
+        },
+        "host_filter": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Novo filtro de hosts"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Novo nome"
+        },
+        "snippet_id": {
+          "description": "ID do snippet a atualizar",
+          "type": "string"
+        }
+      },
+      "required": [
+        "snippet_id"
+      ],
+      "type": "object"
+    },
+    "name": "termix_update_snippet",
+    "toolset": "snippets"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": false,
+      "open_world_hint": true,
+      "read_only_hint": false
+    },
+    "description": "Escreve (sobrescreve) o conteudo de um arquivo remoto.",
+    "flags": [
+      "data-access"
+    ],
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "description": "Conteudo a escrever (sobrescreve)",
+          "type": "string"
+        },
+        "host_id": {
+          "description": "ID do host",
+          "type": "string"
+        },
+        "path": {
+          "description": "Caminho do arquivo",
+          "type": "string"
+        }
+      },
+      "required": [
+        "host_id",
+        "path",
+        "content"
+      ],
+      "type": "object"
+    },
+    "name": "termix_write_file",
+    "toolset": "files"
+  }
+]
