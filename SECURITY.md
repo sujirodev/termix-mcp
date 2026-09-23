@@ -1,51 +1,51 @@
 # Security Policy
 
-## Modelo de ameacas
+## Threat model
 
-O termix-mcp fala com o Termix usando uma unica API key (`TERMIX_API_KEY`). O que essa
-API key pode fazer no Termix, o termix-mcp tambem pode fazer atraves de um agente LLM -
-o servidor nao adiciona uma segunda barreira de autorizacao alem do RBAC do proprio
-Termix. Consequencias praticas:
+termix-mcp talks to Termix using a single API key (`TERMIX_API_KEY`). Whatever that
+API key can do in Termix, termix-mcp can also do through an LLM agent -
+the server doesn't add a second authorization barrier beyond Termix's own RBAC.
+Practical consequences:
 
-- **Use uma API key dedicada, com RBAC minimo.** Se o agente so precisa ver hosts e
-  rodar snippets, a key nao deveria ter acesso a `credentials`, `admin` nem a hosts fora
-  do escopo pretendido. O Termix aplica RBAC por API key; o termix-mcp nao filtra por
-  cima disso, so oferece toolsets/read-only como uma segunda camada opcional.
-- **`TERMIX_MCP_READ_ONLY=true`** bloqueia toda tool de escrita em duas camadas
-  (nao aparece na listagem e e rejeitada se chamada mesmo assim). Use quando o caso de
-  uso e so leitura/diagnostico.
-- **Toolsets fora do default sao opt-in por motivo.** `credentials` expoe segredos
-  (via `termix_reveal_*`, quando `TERMIX_MCP_REDACT_SECRETS=false`); `files`/`docker`
-  abrem uma sessao SSH real no host de destino; `admin`/`dangerous` tocam configuracao
-  da instancia. Ligue so o que o caso de uso pedir.
-- **Redacao por padrao.** Campos que parecem segredo (senha, chave privada, token,
-  TOTP, API key) saem mascarados (`***`) em toda saida de tool, a menos que a tool seja
-  explicitamente de revelacao e `TERMIX_MCP_REDACT_SECRETS=false`. Isso e uma heuristica
-  por nome de campo, nao uma garantia formal - nao e substituto para RBAC correto na API
+- **Use a dedicated API key with minimal RBAC.** If the agent only needs to view hosts and
+  run snippets, the key shouldn't have access to `credentials`, `admin`, or hosts outside
+  the intended scope. Termix enforces RBAC per API key; termix-mcp doesn't filter on top
+  of that, it only offers toolsets/read-only as an optional second layer.
+- **`TERMIX_MCP_READ_ONLY=true`** blocks every write tool at two layers
+  (it doesn't appear in the listing and is rejected if called anyway). Use it when the
+  use case is read-only/diagnostics.
+- **Toolsets outside the default are opt-in for a reason.** `credentials` exposes secrets
+  (via `termix_reveal_*`, when `TERMIX_MCP_REDACT_SECRETS=false`); `files`/`docker`
+  open a real SSH session on the target host; `admin`/`dangerous` touch instance
+  configuration. Only enable what the use case requires.
+- **Redaction by default.** Fields that look like secrets (password, private key, token,
+  TOTP, API key) come out masked (`***`) in every tool output, unless the tool is
+  explicitly a reveal tool and `TERMIX_MCP_REDACT_SECRETS=false`. This is a heuristic
+  based on field name, not a formal guarantee - it's not a substitute for correct RBAC on the API
   key.
-- **Prompt injection via conteudo do Termix e risco do operador.** Nome de host,
-  descricao de snippet, log de sessao etc. sao texto que um agente pode ler e agir sobre.
-  Trate o conteudo do seu Termix como voce trataria qualquer entrada nao confiavel para
-  o agente.
-- **Sem execucao de shell arbitrario na v1.** Nenhuma tool aceita um comando livre para
-  rodar num host; `termix_run_snippet` roda um snippet ja cadastrado no Termix, sujeito
-  ao RBAC da API key.
+- **Prompt injection via Termix content is the operator's risk.** Host names,
+  snippet descriptions, session logs, etc. are text that an agent can read and act on.
+  Treat your Termix content as you would treat any untrusted input given to
+  the agent.
+- **No arbitrary shell execution in v1.** No tool accepts a free-form command to
+  run on a host; `termix_run_snippet` runs a snippet already registered in Termix, subject
+  to the API key's RBAC.
 
-## Transporte HTTP
+## HTTP transport
 
-O transporte HTTP (`TERMIX_MCP_TRANSPORT=http`) nao tem autenticacao propria na v1: ele
-depende de bind local (`127.0.0.1` por padrao) e de um path aleatorio nao documentado
-(`TERMIX_MCP_HTTP_PATH`, gerado e logado na inicializacao se nao for definido). Expor
-isso além de localhost sem um reverse proxy com autenticacao na frente esta fora do
-modelo de ameacas suportado.
+The HTTP transport (`TERMIX_MCP_TRANSPORT=http`) has no authentication of its own in v1: it
+relies on a local bind (`127.0.0.1` by default) and an undocumented random path
+(`TERMIX_MCP_HTTP_PATH`, generated and logged at startup if not set). Exposing
+this beyond localhost without an authenticating reverse proxy in front is outside the
+supported threat model.
 
-## Fora de escopo
+## Out of scope
 
-- Seguranca do proprio Termix (autenticacao, RBAC, armazenamento de segredos) - reporte
-  no [repositorio do Termix](https://github.com/LukeGus/Termix).
-- Vulnerabilidades no `termix-sdk` - reporte no
-  [repositorio do SDK](https://github.com/sujirodev/termix-sdk).
+- Security of Termix itself (authentication, RBAC, secret storage) - report it
+  at the [Termix repository](https://github.com/LukeGus/Termix).
+- Vulnerabilities in `termix-sdk` - report them at the
+  [SDK repository](https://github.com/sujirodev/termix-sdk).
 
-## Reportando uma vulnerabilidade
+## Reporting a vulnerability
 
-Abra um [GitHub Security Advisory](https://github.com/sujirodev/termix-mcp/security/advisories/new) privado neste repositorio. Nao abra uma issue publica para uma vulnerabilidade ainda nao corrigida.
+Open a private [GitHub Security Advisory](https://github.com/sujirodev/termix-mcp/security/advisories/new) in this repository. Don't open a public issue for an unfixed vulnerability.

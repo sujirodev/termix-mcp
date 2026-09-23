@@ -6,27 +6,27 @@
 [![Python](https://img.shields.io/pypi/pyversions/termix-mcp?cacheSeconds=3600)](https://pypi.org/project/termix-mcp/)
 [![Docker](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fsujirodev%2Ftermix-mcp%2Fbadges%2Fdocker.json)](https://github.com/sujirodev/termix-mcp/pkgs/container/termix-mcp)
 
-Servidor [MCP](https://modelcontextprotocol.io) para o [Termix](https://github.com/LukeGus/Termix), o gerenciador self-hosted de SSH/RDP/VNC. Deixa um agente (Claude Desktop, Claude Code, Cursor, VS Code...) listar e operar hosts, snippets, dashboard, metricas e auditoria do seu Termix, construido sobre o [termix-sdk](https://github.com/sujirodev/termix-sdk).
+[MCP](https://modelcontextprotocol.io) server for [Termix](https://github.com/LukeGus/Termix), the self-hosted SSH/RDP/VNC manager. Lets an agent (Claude Desktop, Claude Code, Cursor, VS Code...) list and operate your Termix's hosts, snippets, dashboard, metrics and audit trail, built on top of [termix-sdk](https://github.com/sujirodev/termix-sdk).
 
-Nao e um wrapper 1:1 da API do Termix: e um conjunto curado de tools, seguro por padrao (sem segredos, sem sessao SSH persistente, sem tools destrutivas fora de toolsets explicitos).
+Not a 1:1 wrapper of the Termix API: it's a curated set of tools, secure by default (no secrets, no persistent SSH session, no destructive tools outside of explicit toolsets).
 
 <!-- mcp-name: io.github.sujirodev/termix-mcp -->
 
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-io.github.sujirodev%2Ftermix--mcp-blue)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.sujirodev/termix-mcp)
 
-## Instalar
+## Install
 
 ```bash
 uvx termix-mcp
 ```
 
-Alternativas: `pip install termix-mcp` ou a imagem `ghcr.io/sujirodev/termix-mcp`.
+Alternatives: `pip install termix-mcp` or the `ghcr.io/sujirodev/termix-mcp` image.
 
-Requer uma API key do Termix (`tmx_...`) com permissao RBAC minima para o que o agente vai fazer - veja [SECURITY.md](SECURITY.md).
+Requires a Termix API key (`tmx_...`) with the minimum RBAC permissions for what the agent will do - see [SECURITY.md](SECURITY.md).
 
-## Configurar no cliente
+## Configure in your client
 
-Claude Desktop / Claude Code (`claude_desktop_config.json` ou `.mcp.json`):
+Claude Desktop / Claude Code (`claude_desktop_config.json` or `.mcp.json`):
 
 ```json
 {
@@ -43,149 +43,149 @@ Claude Desktop / Claude Code (`claude_desktop_config.json` ou `.mcp.json`):
 }
 ```
 
-Cursor / VS Code: mesmo formato, no arquivo de configuracao MCP de cada um.
+Cursor / VS Code: same format, in each one's MCP configuration file.
 
-## Voce diz / o que acontece
+## You say / what happens
 
-| Voce diz | O que a tool faz |
+| You say | What the tool does |
 |---|---|
-| "quais hosts eu tenho cadastrados?" | `termix_list_hosts` |
-| "mostra as metricas do host X" | `termix_get_host_metrics` |
-| "roda o snippet Y no host X" | `termix_run_snippet` (bloqueada em modo read-only) |
-| "cria um host novo pra esse servidor" | `termix_create_host` (bloqueada em modo read-only) |
-| "o que aconteceu de auditoria essa semana?" | `termix_list_audit_events` |
+| "what hosts do I have registered?" | `termix_list_hosts` |
+| "show me the metrics for host X" | `termix_get_host_metrics` |
+| "run snippet Y on host X" | `termix_run_snippet` (blocked in read-only mode) |
+| "create a new host for this server" | `termix_create_host` (blocked in read-only mode) |
+| "what audit activity happened this week?" | `termix_list_audit_events` |
 
-## Variaveis de ambiente
+## Environment variables
 
-| Variavel | Default | Descricao |
+| Variable | Default | Description |
 |---|---|---|
-| `TERMIX_URL` | obrigatoria | URL base do Termix |
-| `TERMIX_API_KEY` | obrigatoria | API key `tmx_...` (JWT/TOTP nao sao suportados) |
-| `TERMIX_SERVICE_URLS` | vazio | JSON `{"database": "http://..."}` para instalacoes sem proxy |
-| `TERMIX_VERIFY_SSL` | `true` | Valida certificado TLS |
-| `TERMIX_TIMEOUT` | `30` | Timeout por requisicao (s) |
-| `TERMIX_MAX_RETRIES` | `2` | Repassado ao SDK |
-| `TERMIX_MCP_READ_ONLY` | `false` | Esconde e bloqueia tools de escrita |
-| `TERMIX_MCP_TOOLSETS` | `default` | `default`, `all`, ou lista `hosts,snippets,files` |
-| `TERMIX_MCP_ENABLED_TOOLS` | vazio | Allowlist por nome de tool |
-| `TERMIX_MCP_DISABLED_TOOLS` | vazio | Denylist por nome de tool |
-| `TERMIX_MCP_REDACT_SECRETS` | `true` | Mascara segredos em todas as saidas |
-| `TERMIX_MCP_MAX_ITEMS` | `50` | Limite default de itens em listagens |
-| `TERMIX_MCP_TRANSPORT` | `stdio` | `stdio` ou `http` |
-| `TERMIX_MCP_HTTP_HOST` / `_PORT` | `127.0.0.1` / `8765` | Bind do transporte HTTP |
-| `TERMIX_MCP_HTTP_PATH` | gerado e logado | Path secreto do endpoint HTTP |
-| `TERMIX_MCP_LOG_LEVEL` | `INFO` | Nivel de log (stderr no stdio, stdout no http) |
+| `TERMIX_URL` | required | Termix base URL |
+| `TERMIX_API_KEY` | required | `tmx_...` API key (JWT/TOTP are not supported) |
+| `TERMIX_SERVICE_URLS` | empty | JSON `{"database": "http://..."}` for installs without a proxy |
+| `TERMIX_VERIFY_SSL` | `true` | Validates the TLS certificate |
+| `TERMIX_TIMEOUT` | `30` | Timeout per request (s) |
+| `TERMIX_MAX_RETRIES` | `2` | Passed through to the SDK |
+| `TERMIX_MCP_READ_ONLY` | `false` | Hides and blocks write tools |
+| `TERMIX_MCP_TOOLSETS` | `default` | `default`, `all`, or a list `hosts,snippets,files` |
+| `TERMIX_MCP_ENABLED_TOOLS` | empty | Allowlist by tool name |
+| `TERMIX_MCP_DISABLED_TOOLS` | empty | Denylist by tool name |
+| `TERMIX_MCP_REDACT_SECRETS` | `true` | Masks secrets in all outputs |
+| `TERMIX_MCP_MAX_ITEMS` | `50` | Default item limit for listings |
+| `TERMIX_MCP_TRANSPORT` | `stdio` | `stdio` or `http` |
+| `TERMIX_MCP_HTTP_HOST` / `_PORT` | `127.0.0.1` / `8765` | HTTP transport bind |
+| `TERMIX_MCP_HTTP_PATH` | generated and logged | Secret path of the HTTP endpoint |
+| `TERMIX_MCP_LOG_LEVEL` | `INFO` | Log level (stderr on stdio, stdout on http) |
 
 ## Toolsets
 
-Ligados por padrao: `hosts`, `snippets`, `dashboard`, `metrics`, `system`, `audit`.
+Enabled by default: `hosts`, `snippets`, `dashboard`, `metrics`, `system`, `audit`.
 
 Opt-in (`TERMIX_MCP_TOOLSETS=hosts,files,docker,...`): `credentials`, `files`, `docker`, `tunnels`, `alerts`, `automations`, `users`.
 
-Desligados e explicitos (nunca entram em `all`): `admin`, `dangerous`.
+Disabled and explicit (never included in `all`): `admin`, `dangerous`.
 
-`TERMIX_MCP_READ_ONLY=true` esconde e bloqueia toda tool que nao seja read-only, em qualquer toolset.
+`TERMIX_MCP_READ_ONLY=true` hides and blocks every tool that isn't read-only, in any toolset.
 
 ## Tools
 
 <details>
-<summary>Lista completa de tools (gerada por <code>scripts/generate_tool_docs.py</code>)</summary>
+<summary>Full tool list (generated by <code>scripts/generate_tool_docs.py</code>)</summary>
 
 <!-- TOOLS_TABLE_START -->
-| Tool | Toolset | Read-only | Destrutiva | Flags |
+| Tool | Toolset | Read-only | Destructive | Flags |
 |---|---|:---:|:---:|---|
-| `termix_get_audit_forwarding` | admin | sim | nao | admin |
-| `termix_get_branding` | admin | sim | nao | admin |
-| `termix_get_encryption_status` | admin | sim | nao | admin |
-| `termix_get_host_defaults` | admin | sim | nao | admin |
-| `termix_get_termix_id_status` | admin | sim | nao | admin |
-| `termix_list_sso_providers` | admin | sim | nao | admin |
-| `termix_update_branding` | admin | nao | nao | admin |
-| `termix_acknowledge_alert_firing` | alerts | nao | nao | - |
-| `termix_create_alert_rule` | alerts | nao | nao | - |
-| `termix_delete_alert_rule` | alerts | nao | sim | - |
-| `termix_list_alert_rules` | alerts | sim | nao | - |
-| `termix_get_session_log` | audit | sim | nao | - |
-| `termix_list_audit_events` | audit | sim | nao | - |
-| `termix_list_session_logs` | audit | sim | nao | - |
-| `termix_get_automation` | automations | sim | nao | - |
-| `termix_list_automations` | automations | sim | nao | - |
-| `termix_list_fleets` | automations | sim | nao | - |
-| `termix_run_automation` | automations | nao | nao | data-access |
-| `termix_create_credential` | credentials | nao | nao | - |
-| `termix_delete_credential` | credentials | nao | sim | - |
-| `termix_get_credential` | credentials | sim | nao | - |
-| `termix_list_credentials` | credentials | sim | nao | - |
-| `termix_reveal_credential` | credentials | sim | nao | data-access |
-| `termix_update_credential` | credentials | nao | nao | - |
-| `termix_get_dashboard_summary` | dashboard | sim | nao | - |
-| `termix_get_homepage` | dashboard | sim | nao | - |
-| `termix_list_open_tabs` | dashboard | sim | nao | - |
-| `termix_list_workspaces` | dashboard | sim | nao | - |
-| `termix_get_container` | docker | sim | nao | data-access |
-| `termix_get_container_logs` | docker | sim | nao | data-access |
-| `termix_get_container_stats` | docker | sim | nao | data-access |
-| `termix_list_containers` | docker | sim | nao | data-access |
-| `termix_restart_container` | docker | nao | nao | data-access |
-| `termix_start_container` | docker | nao | nao | data-access |
-| `termix_stop_container` | docker | nao | nao | data-access |
-| `termix_create_folder` | files | nao | nao | data-access |
-| `termix_delete_file` | files | nao | sim | data-access |
-| `termix_list_files` | files | sim | nao | data-access |
-| `termix_move_file` | files | nao | nao | data-access |
-| `termix_read_file` | files | sim | nao | data-access |
-| `termix_rename_file` | files | nao | nao | data-access |
-| `termix_write_file` | files | nao | nao | data-access |
-| `termix_create_host` | hosts | nao | nao | - |
-| `termix_delete_host` | hosts | nao | sim | - |
-| `termix_disable_host_autostart` | hosts | nao | nao | - |
-| `termix_enable_host_autostart` | hosts | nao | nao | - |
-| `termix_get_host` | hosts | sim | nao | - |
-| `termix_get_network_topology` | hosts | sim | nao | - |
-| `termix_list_host_folders` | hosts | sim | nao | - |
-| `termix_list_host_tags` | hosts | sim | nao | - |
-| `termix_list_hosts` | hosts | sim | nao | - |
-| `termix_update_host` | hosts | nao | nao | - |
-| `termix_get_host_metrics` | metrics | sim | nao | - |
-| `termix_get_host_status` | metrics | sim | nao | - |
-| `termix_get_metrics_history` | metrics | sim | nao | - |
-| `termix_get_proxmox_stats` | metrics | sim | nao | - |
-| `termix_list_active_alerts` | metrics | sim | nao | - |
-| `termix_list_host_statuses` | metrics | sim | nao | - |
-| `termix_create_snippet` | snippets | nao | nao | - |
-| `termix_delete_snippet` | snippets | nao | sim | - |
-| `termix_get_snippet` | snippets | sim | nao | - |
-| `termix_list_snippets` | snippets | sim | nao | - |
-| `termix_run_snippet` | snippets | nao | nao | - |
-| `termix_update_snippet` | snippets | nao | nao | - |
-| `termix_get_preferences` | system | sim | nao | - |
-| `termix_get_system_info` | system | sim | nao | - |
-| `termix_list_api_keys` | system | sim | nao | - |
-| `termix_create_tunnel` | tunnels | nao | nao | data-access |
-| `termix_delete_tunnel` | tunnels | nao | nao | data-access |
-| `termix_get_tunnel` | tunnels | sim | nao | - |
-| `termix_list_tunnel_presets` | tunnels | sim | nao | - |
-| `termix_list_tunnels` | tunnels | sim | nao | - |
-| `termix_assign_role` | users | nao | nao | admin |
-| `termix_get_user` | users | sim | nao | admin |
-| `termix_list_credential_access` | users | sim | nao | admin |
-| `termix_list_folder_access` | users | sim | nao | admin |
-| `termix_list_roles` | users | sim | nao | admin |
-| `termix_list_users` | users | sim | nao | admin |
+| `termix_get_audit_forwarding` | admin | yes | no | admin |
+| `termix_get_branding` | admin | yes | no | admin |
+| `termix_get_encryption_status` | admin | yes | no | admin |
+| `termix_get_host_defaults` | admin | yes | no | admin |
+| `termix_get_termix_id_status` | admin | yes | no | admin |
+| `termix_list_sso_providers` | admin | yes | no | admin |
+| `termix_update_branding` | admin | no | no | admin |
+| `termix_acknowledge_alert_firing` | alerts | no | no | - |
+| `termix_create_alert_rule` | alerts | no | no | - |
+| `termix_delete_alert_rule` | alerts | no | yes | - |
+| `termix_list_alert_rules` | alerts | yes | no | - |
+| `termix_get_session_log` | audit | yes | no | - |
+| `termix_list_audit_events` | audit | yes | no | - |
+| `termix_list_session_logs` | audit | yes | no | - |
+| `termix_get_automation` | automations | yes | no | - |
+| `termix_list_automations` | automations | yes | no | - |
+| `termix_list_fleets` | automations | yes | no | - |
+| `termix_run_automation` | automations | no | no | data-access |
+| `termix_create_credential` | credentials | no | no | - |
+| `termix_delete_credential` | credentials | no | yes | - |
+| `termix_get_credential` | credentials | yes | no | - |
+| `termix_list_credentials` | credentials | yes | no | - |
+| `termix_reveal_credential` | credentials | yes | no | data-access |
+| `termix_update_credential` | credentials | no | no | - |
+| `termix_get_dashboard_summary` | dashboard | yes | no | - |
+| `termix_get_homepage` | dashboard | yes | no | - |
+| `termix_list_open_tabs` | dashboard | yes | no | - |
+| `termix_list_workspaces` | dashboard | yes | no | - |
+| `termix_get_container` | docker | yes | no | data-access |
+| `termix_get_container_logs` | docker | yes | no | data-access |
+| `termix_get_container_stats` | docker | yes | no | data-access |
+| `termix_list_containers` | docker | yes | no | data-access |
+| `termix_restart_container` | docker | no | no | data-access |
+| `termix_start_container` | docker | no | no | data-access |
+| `termix_stop_container` | docker | no | no | data-access |
+| `termix_create_folder` | files | no | no | data-access |
+| `termix_delete_file` | files | no | yes | data-access |
+| `termix_list_files` | files | yes | no | data-access |
+| `termix_move_file` | files | no | no | data-access |
+| `termix_read_file` | files | yes | no | data-access |
+| `termix_rename_file` | files | no | no | data-access |
+| `termix_write_file` | files | no | no | data-access |
+| `termix_create_host` | hosts | no | no | - |
+| `termix_delete_host` | hosts | no | yes | - |
+| `termix_disable_host_autostart` | hosts | no | no | - |
+| `termix_enable_host_autostart` | hosts | no | no | - |
+| `termix_get_host` | hosts | yes | no | - |
+| `termix_get_network_topology` | hosts | yes | no | - |
+| `termix_list_host_folders` | hosts | yes | no | - |
+| `termix_list_host_tags` | hosts | yes | no | - |
+| `termix_list_hosts` | hosts | yes | no | - |
+| `termix_update_host` | hosts | no | no | - |
+| `termix_get_host_metrics` | metrics | yes | no | - |
+| `termix_get_host_status` | metrics | yes | no | - |
+| `termix_get_metrics_history` | metrics | yes | no | - |
+| `termix_get_proxmox_stats` | metrics | yes | no | - |
+| `termix_list_active_alerts` | metrics | yes | no | - |
+| `termix_list_host_statuses` | metrics | yes | no | - |
+| `termix_create_snippet` | snippets | no | no | - |
+| `termix_delete_snippet` | snippets | no | yes | - |
+| `termix_get_snippet` | snippets | yes | no | - |
+| `termix_list_snippets` | snippets | yes | no | - |
+| `termix_run_snippet` | snippets | no | no | - |
+| `termix_update_snippet` | snippets | no | no | - |
+| `termix_get_preferences` | system | yes | no | - |
+| `termix_get_system_info` | system | yes | no | - |
+| `termix_list_api_keys` | system | yes | no | - |
+| `termix_create_tunnel` | tunnels | no | no | data-access |
+| `termix_delete_tunnel` | tunnels | no | no | data-access |
+| `termix_get_tunnel` | tunnels | yes | no | - |
+| `termix_list_tunnel_presets` | tunnels | yes | no | - |
+| `termix_list_tunnels` | tunnels | yes | no | - |
+| `termix_assign_role` | users | no | no | admin |
+| `termix_get_user` | users | yes | no | admin |
+| `termix_list_credential_access` | users | yes | no | admin |
+| `termix_list_folder_access` | users | yes | no | admin |
+| `termix_list_roles` | users | yes | no | admin |
+| `termix_list_users` | users | yes | no | admin |
 
 Total: 78 tools.
 <!-- TOOLS_TABLE_END -->
 
 </details>
 
-## Contribuindo
+## Contributing
 
-Veja [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Seguranca
+## Security
 
-Veja [SECURITY.md](SECURITY.md) para o modelo de ameaças.
+See [SECURITY.md](SECURITY.md) for the threat model.
 
-## Licenca
+## License
 
 [MIT](LICENSE)
