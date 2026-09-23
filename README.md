@@ -45,6 +45,18 @@ Claude Desktop / Claude Code (`claude_desktop_config.json` or `.mcp.json`):
 
 Cursor / VS Code: same format, in each one's MCP configuration file.
 
+## Install via the MCP Registry
+
+termix-mcp is published in the official [MCP Registry](https://registry.modelcontextprotocol.io) under the name `io.github.sujirodev/termix-mcp`, with both a PyPI (`uvx`) package and an OCI (Docker) image listed - see [server.json](server.json).
+
+Clients that support registry-based discovery can find and install it directly from there instead of hand-writing the JSON config above:
+
+```bash
+curl -s "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.sujirodev/termix-mcp"
+```
+
+Then follow your client's own "add from registry" flow, searching for `io.github.sujirodev/termix-mcp`. You'll still need to set `TERMIX_URL` and `TERMIX_API_KEY` yourself - the registry entry doesn't carry your credentials.
+
 ## You say / what happens
 
 | You say | What the tool does |
