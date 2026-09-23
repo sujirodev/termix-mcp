@@ -11,7 +11,7 @@ Nao e um wrapper 1:1 da API do Termix: e um conjunto curado de tools, seguro por
 
 <!-- mcp-name: io.github.sujirodev/termix-mcp -->
 
-Tambem disponivel no [MCP Registry](https://registry.modelcontextprotocol.io) como `io.github.sujirodev/termix-mcp`.
+[![MCP Registry](https://img.shields.io/badge/MCP_Registry-io.github.sujirodev%2Ftermix--mcp-blue)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.sujirodev/termix-mcp)
 
 ## Instalar
 
