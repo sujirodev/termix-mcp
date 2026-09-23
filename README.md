@@ -4,6 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/v/termix-mcp?cacheSeconds=3600)](https://pypi.org/project/termix-mcp/)
 [![License](https://img.shields.io/github/license/sujirodev/termix-mcp)](LICENSE)
 [![Python](https://img.shields.io/pypi/pyversions/termix-mcp?cacheSeconds=3600)](https://pypi.org/project/termix-mcp/)
+[![Docker](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fsujirodev%2Ftermix-mcp%2Fbadges%2Fdocker.json)](https://github.com/sujirodev/termix-mcp/pkgs/container/termix-mcp)
 
 Servidor [MCP](https://modelcontextprotocol.io) para o [Termix](https://github.com/LukeGus/Termix), o gerenciador self-hosted de SSH/RDP/VNC. Deixa um agente (Claude Desktop, Claude Code, Cursor, VS Code...) listar e operar hosts, snippets, dashboard, metricas e auditoria do seu Termix, construido sobre o [termix-sdk](https://github.com/sujirodev/termix-sdk).
 

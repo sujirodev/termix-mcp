@@ -69,3 +69,36 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  badge:
+    name: badge
+    needs: image
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: true
+      # Publishes docker.json to the unprotected `badges` branch; the README's
+      # shields.io endpoint badge reads it from raw.githubusercontent.com.
+      - name: Publish docker.json to the badges branch
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          VERSION="${TAG#v}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin badges >/dev/null 2>&1; then
+            git fetch origin badges
+            git checkout badges
+          else
+            git checkout --orphan badges
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+          printf '{"schemaVersion":1,"label":"ghcr.io","message":"%s","color":"2496ED"}\n' "$VERSION" > docker.json
+          git add docker.json
+          git commit -m "chore(badge): docker $VERSION"
+          git push origin badges
