@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Vulnerabilidade de seguranca
+    url: https://github.com/sujirodev/termix-mcp/security/advisories/new
+    about: Nao abra issue publica para vulnerabilidade ainda nao corrigida; use um Security Advisory privado.
+  - name: Bug no Termix (nao no termix-mcp)
+    url: https://github.com/LukeGus/Termix/issues
+    about: Problemas na propria aplicacao Termix pertencem ao repositorio dela.

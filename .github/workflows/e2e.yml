@@ -1,0 +1,53 @@
+name: E2E
+
+# The MCP server against a real Termix (tests/e2e/), pinned to the release the SDK's
+# spec was generated from. Docs-only changes skip it.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["**.md", "docs/**", ".github/ISSUE_TEMPLATE/**"]
+  pull_request:
+    paths-ignore: ["**.md", "docs/**", ".github/ISSUE_TEMPLATE/**"]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  UV_LOCKED: "1"
+  TERMIX_IMAGE: ghcr.io/lukegus/termix:2.8.0
+
+jobs:
+  e2e:
+    name: e2e
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.13"
+          enable-cache: true
+      - run: uv sync --group dev
+      - name: Start Termix
+        run: docker compose -f docker/e2e/compose.yml up -d --wait
+      - name: Run the E2E suite
+        env:
+          TERMIX_E2E: "1"
+          TERMIX_E2E_BASE_URL: http://localhost:8080
+          TERMIX_E2E_PASSWORD: E2e-Ci-Aa1-${{ github.run_id }}
+        run: uv run pytest tests/e2e -m "e2e and not requires_ssh" -q
+      - name: Termix logs
+        if: failure()
+        run: docker compose -f docker/e2e/compose.yml logs --no-color --tail=300
+      - name: Tear down
+        if: always()
+        run: docker compose -f docker/e2e/compose.yml down -v

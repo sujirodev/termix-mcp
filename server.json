@@ -1,0 +1,73 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.sujirodev/termix-mcp",
+  "title": "Termix",
+  "description": "Manage hosts, snippets, dashboard, metrics and audit of a self-hosted Termix (SSH/RDP/VNC manager)",
+  "repository": {
+    "url": "https://github.com/sujirodev/termix-mcp",
+    "source": "github"
+  },
+  "version": "0.0.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "termix-mcp",
+      "version": "0.0.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "TERMIX_URL",
+          "description": "Base URL of the Termix instance",
+          "isRequired": true,
+          "format": "string"
+        },
+        {
+          "name": "TERMIX_API_KEY",
+          "description": "Termix API key (tmx_...)",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "TERMIX_MCP_TOOLSETS",
+          "description": "default, all, or a comma-separated list (hosts,snippets,files,...)",
+          "isRequired": false,
+          "format": "string",
+          "default": "default"
+        },
+        {
+          "name": "TERMIX_MCP_READ_ONLY",
+          "description": "Hide and block every write tool",
+          "isRequired": false,
+          "format": "boolean",
+          "default": "false"
+        }
+      ]
+    },
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/sujirodev/termix-mcp:0.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "TERMIX_URL",
+          "description": "Base URL of the Termix instance",
+          "isRequired": true,
+          "format": "string"
+        },
+        {
+          "name": "TERMIX_API_KEY",
+          "description": "Termix API key (tmx_...)",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}

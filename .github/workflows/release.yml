@@ -1,0 +1,140 @@
+name: Release
+
+# Tag `vX.Y.Z` -> preflight (semver, changelog from git-cliff) -> full CI -> PyPI
+# (trusted publishing, manual approval on the `pypi` environment) -> GitHub Release ->
+# GHCR image -> MCP Registry (last, and its failure does not fail the release).
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+*"
+
+permissions: {}
+
+jobs:
+  preflight:
+    name: preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Tag is semver
+        id: version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          if ! echo "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.]+)?$'; then
+            echo "::error::Tag $TAG is not semver (vX.Y.Z[-pre])"
+            exit 1
+          fi
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+      - name: Release notes from Conventional Commits
+        uses: orhun/git-cliff-action@a9a95522b26fe6403f7bb24031f21fb573d0f5ff # v4
+        with:
+          config: cliff.toml
+          args: --latest --strip header
+        env:
+          OUTPUT: release-notes.md
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: release-notes
+          path: release-notes.md
+          if-no-files-found: error
+
+  ci:
+    name: ci
+    needs: preflight
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+      id-token: write
+
+  publish-pypi:
+    name: publish-pypi
+    needs: [preflight, ci]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    # The `pypi` environment carries a required-reviewer rule: manual approval gate.
+    environment:
+      name: pypi
+      url: https://pypi.org/project/termix-mcp/${{ needs.preflight.outputs.version }}/
+    permissions:
+      id-token: write # PyPI Trusted Publishing
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        with:
+          packages-dir: dist/
+
+  github-release:
+    name: github-release
+    needs: [preflight, publish-pypi]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: release-notes
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: gh release create "$TAG" dist/* --title "$TAG" --notes-file release-notes.md --verify-tag
+
+  docker:
+    name: docker
+    needs: [preflight, publish-pypi]
+    uses: ./.github/workflows/docker.yml
+    permissions:
+      contents: read
+      packages: write
+
+  mcp-registry:
+    name: mcp-registry
+    needs: [preflight, publish-pypi, docker]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    # Registry format may change (plano-implementacao.md, riscos): never fails the release.
+    continue-on-error: true
+    permissions:
+      contents: read
+      id-token: write # registry OIDC login
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+      - name: Stamp the version into server.json
+        env:
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: |
+          jq --arg v "$VERSION" '
+            .version = $v
+            | .packages |= map(
+                if .registryType == "pypi" then .version = $v
+                elif .registryType == "oci" then .identifier = ("ghcr.io/sujirodev/termix-mcp:" + $v)
+                else . end)
+          ' server.json > server.tmp && mv server.tmp server.json
+          ./mcp-publisher validate
+      - run: ./mcp-publisher login github-oidc
+      - run: ./mcp-publisher publish

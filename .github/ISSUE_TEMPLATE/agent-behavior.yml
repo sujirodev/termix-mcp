@@ -1,0 +1,29 @@
+name: Comportamento do agente
+description: O agente (Claude, Cursor...) usou uma tool de um jeito inesperado ou perigoso.
+labels: ["agent-behavior"]
+body:
+  - type: input
+    id: agent
+    attributes:
+      label: Agente e modelo usados
+      placeholder: "Claude Code, claude-sonnet-5"
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: O que voce pediu ao agente
+    validations:
+      required: true
+  - type: textarea
+    id: tools
+    attributes:
+      label: Quais tools o agente chamou, em que ordem, com quais argumentos (redija segredos)
+    validations:
+      required: true
+  - type: textarea
+    id: concern
+    attributes:
+      label: O que foi inesperado ou preocupante
+    validations:
+      required: true

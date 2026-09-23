@@ -1,0 +1,40 @@
+name: Falha ao iniciar
+description: O servidor nao sobe / o cliente MCP nao consegue conectar.
+labels: ["bug", "startup"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Versao do termix-mcp
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Metodo de instalacao
+      options: ["uvx", "pip", "Docker", "fonte (git clone)"]
+    validations:
+      required: true
+  - type: dropdown
+    id: client
+    attributes:
+      label: Cliente MCP
+      options: ["Claude Desktop", "Claude Code", "Cursor", "VS Code", "outro"]
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuracao usada
+      description: Cole o bloco de config do cliente e as env vars definidas (redija TERMIX_API_KEY antes de colar).
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Log de inicializacao
+      description: Saida em stderr (stdio) ou stdout (http) ao subir o servidor.
+      render: shell
+    validations:
+      required: true

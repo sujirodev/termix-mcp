@@ -1,0 +1,37 @@
+name: Bug em runtime
+description: Uma tool ja funcionando se comportou errado ou quebrou.
+labels: ["bug"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Versao do termix-mcp
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: tool
+    attributes:
+      label: Tool afetada
+      placeholder: "termix_list_hosts"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: O que voce esperava
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: O que aconteceu
+      description: Cole a mensagem de erro ou a saida da tool. Nao cole segredos (API key, senha, token).
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Como reproduzir
+    validations:
+      required: false
