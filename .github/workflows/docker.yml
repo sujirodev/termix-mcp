@@ -28,10 +28,12 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0 # uv-dynamic-versioning reads the git tag
+      # No enable-cache here: this workflow publishes an image, and zizmor flags a
+      # restored cache in a publishing job as a cache-poisoning vector.
       - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
         with:
           python-version: "3.13"
-          enable-cache: true
+          enable-cache: false
       - name: Build the wheel the image installs
         run: uv build --wheel
       - uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3

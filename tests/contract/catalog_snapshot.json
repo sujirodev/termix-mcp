@@ -63,7 +63,7 @@
       "open_world_hint": true,
       "read_only_hint": false
     },
-    "description": "Cria uma regra de alerta. Valores de gatilho e limites validados contra o\n        backend do Termix 2.8.0 (alert-rules-routes.ts).",
+    "description": "Cria uma regra de alerta. Valores de gatilho e limites validados contra o\nbackend do Termix 2.8.0 (alert-rules-routes.ts).",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -315,7 +315,7 @@
       "open_world_hint": true,
       "read_only_hint": false
     },
-    "description": "Cria um novo host SSH. Use `credential_id` em vez de senha/chave inline sempre\n        que possivel, para nao passar segredos pela chamada da tool.",
+    "description": "Cria um novo host SSH. Use `credential_id` em vez de senha/chave inline sempre\nque possivel, para nao passar segredos pela chamada da tool.",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -563,7 +563,7 @@
       "open_world_hint": true,
       "read_only_hint": false
     },
-    "description": "Cria e conecta um tunel SSH. Expoe apenas um subconjunto curado dos campos do\n        Termix (nao cobre todas as opcoes de SOCKS5/retry da API).",
+    "description": "Cria e conecta um tunel SSH. Expoe apenas um subconjunto curado dos campos do\nTermix (nao cobre todas as opcoes de SOCKS5/retry da API).",
     "flags": [
       "data-access"
     ],
@@ -703,7 +703,7 @@
       "open_world_hint": true,
       "read_only_hint": false
     },
-    "description": "Remove um arquivo ou diretorio remoto. Por padrao vai para a lixeira do\n        Termix (`permanent=False`); confirme com o usuario antes de usar `permanent=True`.",
+    "description": "Remove um arquivo ou diretorio remoto. Por padrao vai para a lixeira do\nTermix (`permanent=False`); confirme com o usuario antes de usar `permanent=True`.",
     "flags": [
       "data-access"
     ],
@@ -745,7 +745,7 @@
       "open_world_hint": true,
       "read_only_hint": false
     },
-    "description": "Remove um host SSH permanentemente. Nao ha confirmacao adicional; confirme com\n        o usuario antes de chamar esta tool.",
+    "description": "Remove um host SSH permanentemente. Nao ha confirmacao adicional; confirme com\no usuario antes de chamar esta tool.",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -1043,7 +1043,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Detalhes de uma credencial, com segredos sempre mascarados. Use\n        `termix_reveal_credential` para obter o valor real.",
+    "description": "Detalhes de uma credencial, com segredos sempre mascarados. Use\n`termix_reveal_credential` para obter o valor real.",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -1068,7 +1068,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Resumo do dashboard: uptime do Termix, atividade recente e links de servico\n        configurados (nao ha um endpoint unico; combina tres chamadas).",
+    "description": "Resumo do dashboard: uptime do Termix, atividade recente e links de servico\nconfigurados (nao ha um endpoint unico; combina tres chamadas).",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -1112,7 +1112,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Itens e layout da homepage configurada (combina duas chamadas: list_items e\n        get_layout).",
+    "description": "Itens e layout da homepage configurada (combina duas chamadas: list_items e\nget_layout).",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -1223,7 +1223,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Historico de metricas de um host. O Termix decide a janela de tempo\n        retornada (nao ha parametro de intervalo nesta versao do SDK); veja\n        `termix_get_preferences`/retencao configurada para saber quanto historico existe.",
+    "description": "Historico de metricas de um host. O Termix decide a janela de tempo\nretornada (nao ha parametro de intervalo nesta versao do SDK); veja\n`termix_get_preferences`/retencao configurada para saber quanto historico existe.",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -1248,7 +1248,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Topologia de rede salva para o usuario dono da API key. Retorna vazio se nunca\n        foi salva.",
+    "description": "Topologia de rede salva para o usuario dono da API key. Retorna vazio se nunca\nfoi salva.",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -1307,7 +1307,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Metadados de um log de sessao; opcionalmente inclui o conteudo gravado,\n        truncado em `max_chars` (a API do Termix nao trunca no servidor).",
+    "description": "Metadados de um log de sessao; opcionalmente inclui o conteudo gravado,\ntruncado em `max_chars` (a API do Termix nao trunca no servidor).",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -1369,7 +1369,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Status de saude e versao do Termix conectado (nao ha um endpoint unico; combina\n        health() e version() do SDK).",
+    "description": "Status de saude e versao do Termix conectado (nao ha um endpoint unico; combina\nhealth() e version() do SDK).",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -1430,7 +1430,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Detalhes de um usuario especifico (nao ha endpoint dedicado; filtra a lista\n        completa de usuarios). Requer privilegio de admin.",
+    "description": "Detalhes de um usuario especifico (nao ha endpoint dedicado; filtra a lista\ncompleta de usuarios). Requer privilegio de admin.",
     "flags": [
       "admin"
     ],
@@ -1491,7 +1491,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Lista metadados das API keys cadastradas no Termix (nunca o valor do token).\n        Requer privilegio de admin no Termix; falha com erro de permissao caso contrario.",
+    "description": "Lista metadados das API keys cadastradas no Termix (nunca o valor do token).\nRequer privilegio de admin no Termix; falha com erro de permissao caso contrario.",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -1632,7 +1632,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Lista arquivos e diretorios em um caminho de um host, via sessao SSH aberta\n        e fechada dentro desta chamada.",
+    "description": "Lista arquivos e diretorios em um caminho de um host, via sessao SSH aberta\ne fechada dentro desta chamada.",
     "flags": [
       "data-access"
     ],
@@ -1758,7 +1758,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Lista as tags em uso, derivadas do campo `tags` de cada host (o Termix nao tem\n        um endpoint dedicado para isso).",
+    "description": "Lista as tags em uso, derivadas do campo `tags` de cada host (o Termix nao tem\num endpoint dedicado para isso).",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -1775,7 +1775,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Lista os hosts SSH cadastrados no Termix, com filtros opcionais aplicados no\n        cliente (a API do Termix nao suporta filtro server-side).",
+    "description": "Lista os hosts SSH cadastrados no Termix, com filtros opcionais aplicados no\ncliente (a API do Termix nao suporta filtro server-side).",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -1899,7 +1899,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Lista todos os provedores SSO configurados, incluindo desabilitados.\n        Requer privilegio de admin.",
+    "description": "Lista todos os provedores SSO configurados, incluindo desabilitados.\nRequer privilegio de admin.",
     "flags": [
       "admin"
     ],
@@ -2025,7 +2025,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Le o conteudo de um arquivo remoto, truncado em `max_chars` (a API do Termix\n        nao limita tamanho no servidor).",
+    "description": "Le o conteudo de um arquivo remoto, truncado em `max_chars` (a API do Termix\nnao limita tamanho no servidor).",
     "flags": [
       "data-access"
     ],
@@ -2133,7 +2133,7 @@
       "open_world_hint": true,
       "read_only_hint": true
     },
-    "description": "Detalhes de uma credencial incluindo o segredo em texto plano, apenas se\n        `TERMIX_MCP_REDACT_SECRETS=false`. Com a configuracao padrao, este resultado sai\n        mascarado igual a `termix_get_credential`.",
+    "description": "Detalhes de uma credencial incluindo o segredo em texto plano, apenas se\n`TERMIX_MCP_REDACT_SECRETS=false`. Com a configuracao padrao, este resultado sai\nmascarado igual a `termix_get_credential`.",
     "flags": [
       "data-access"
     ],
@@ -2160,7 +2160,7 @@
       "open_world_hint": true,
       "read_only_hint": false
     },
-    "description": "Executa uma automacao agora. Isto tem efeito colateral real nos hosts\n        alcancados pela automacao, a menos que `dry_run=True`; confirme com o usuario\n        antes de rodar sem dry_run.",
+    "description": "Executa uma automacao agora. Isto tem efeito colateral real nos hosts\nalcancados pela automacao, a menos que `dry_run=True`; confirme com o usuario\nantes de rodar sem dry_run.",
     "flags": [
       "data-access"
     ],
@@ -2192,7 +2192,7 @@
       "open_world_hint": true,
       "read_only_hint": false
     },
-    "description": "Executa um snippet em um host real via SSH. Isto tem efeito colateral no host\n        de destino; confirme com o usuario antes de chamar, a menos que ele ja tenha\n        pedido explicitamente para rodar este comando.",
+    "description": "Executa um snippet em um host real via SSH. Isto tem efeito colateral no host\nde destino; confirme com o usuario antes de chamar, a menos que ele ja tenha\npedido explicitamente para rodar este comando.",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,
@@ -2479,7 +2479,7 @@
       "open_world_hint": true,
       "read_only_hint": false
     },
-    "description": "Atualiza campos de um host SSH existente. Campos omitidos nao sao alterados:\n        o PUT do Termix substitui o registro inteiro (tags/flags/credentialId omitidos\n        viram vazio), entao a tool le o host atual e envia o merge. Senha/chave atuais\n        sao preservadas pelo backend quando nao enviadas (host.ts, release-2.8.0).",
+    "description": "Atualiza campos de um host SSH existente. Campos omitidos nao sao alterados:\no PUT do Termix substitui o registro inteiro (tags/flags/credentialId omitidos\nviram vazio), entao a tool le o host atual e envia o merge. Senha/chave atuais\nsao preservadas pelo backend quando nao enviadas (host.ts, release-2.8.0).",
     "flags": [],
     "input_schema": {
       "additionalProperties": false,

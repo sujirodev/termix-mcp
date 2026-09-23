@@ -12,6 +12,7 @@ logging tool arguments (which may carry secrets).
 from __future__ import annotations
 
 import functools
+import inspect
 import logging
 import time
 from collections.abc import Awaitable, Callable, Iterable
@@ -95,7 +96,9 @@ def guarded(
             mcp.tool(
                 name=name,
                 title=title,
-                description=description or (fn.__doc__ or "").strip() or None,
+                # cleandoc, not strip: Python 3.13+ dedents docstrings at compile time and
+                # 3.11/3.12 don't, so without this the catalog differs by interpreter.
+                description=description or inspect.cleandoc(fn.__doc__ or "") or None,
                 tags={toolset} | flag_set,
                 annotations=ToolAnnotations(
                     read_only_hint=read_only,
